@@ -1,14 +1,11 @@
 <?php
 /**
- * $Header: /cvsroot/bitweaver/_bit_irlist/edit.php,v 1.1 2005/09/19 13:47:49 lsces Exp $
+ * $Header: /cvsroot/bitweaver/_bit_irlist/edit.php,v 1.2 2006/01/16 06:42:14 lsces Exp $
  *
- * Copyright (c) 2004 bitweaver.org
- * Copyright (c) 2003 tikwiki.org
- * Copyright (c) 2002-2003, Luis Argerich, Garland Foster, Eduardo Polidor, et. al.
+ * Copyright (c) 2006 bitweaver.org
  * All Rights Reserved. See copyright.txt for details and a complete list of authors.
  * Licensed under the GNU LESSER GENERAL PUBLIC LICENSE. See license.txt for details
  *
- * $Id: edit.php,v 1.1 2005/09/19 13:47:49 lsces Exp $
  * @package irlist
  * @subpackage functions
  */
@@ -35,9 +32,6 @@ global $gLibertySystem;
 //if( $gContent->isLocked() ) {
 //	$gBitSystem->fatalError( 'Cannot edit page because it is locked' );
 //}
-
-//include_once( WIKI_PKG_PATH.'page_setup_inc.php' );
-// Now check permissions to access this page
 
 if( !empty( $gContent->mInfo ) ) {
 	$formInfo = $gContent->mInfo;
@@ -133,14 +127,6 @@ if (isset($_REQUEST["fCancel"])) {
 	// to avoid error messages. This can happen if some features are
 	// disabled
 	if( $gContent->store( $_REQUEST ) ) {
-		// nexus menu item storage
-		if( $gBitSystem->isPackageActive( 'nexus' ) && $gBitUser->hasPermission( 'bit_p_insert_nexus_item' ) ) {
-			$nexusHash['title'] = ( isset( $_REQUEST['title'] ) ? $_REQUEST['title'] : NULL );
-			$nexusHash['hint'] = ( isset( $_REQUEST['description'] ) ? $_REQUEST['description'] : NULL );
-			include_once( NEXUS_PKG_PATH.'insert_menu_item_inc.php' );
-		}
-
-		$gContent->invokeServices( 'content_store_function' );
 		if ( $gBitSystem->isFeatureActive( 'irlist_watch_author' ) ) {
 			$gBitUser->storeWatch( "ir_entry_changed", $gContent->mIRId, $gContent->mContentTypeGuid, $_REQUEST['title'], $gContent->getDisplayUrl() );
 		}

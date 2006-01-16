@@ -1,8 +1,18 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_irlist/IRList.php,v 1.1 2005/09/19 13:47:49 lsces Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_irlist/IRList.php,v 1.2 2006/01/16 06:42:14 lsces Exp $
+ *
+ * Copyright ( c ) 2006 bitweaver.org
+ * All Rights Reserved. See copyright.txt for details and a complete list of authors.
+ * Licensed under the GNU LESSER GENERAL PUBLIC LICENSE. See license.txt for details
+ *
  * @package irlist
  */
+
+/**
+ * required setup
+ */
+require_once( LIBERTY_PKG_PATH.'LibertyContent.php' );		// IRList base class
 
 /**
  * @package irlist
@@ -27,8 +37,8 @@ class IRList extends LibertyContent {
 				'handler_file' => 'IRList.php',
 				'maintainer_url' => 'http://www.lsces.co.uk'
 			) );
-		$this->mIRId = $pIRId;
-		$this->mContentId = $pContentId;
+		$this->mIRId = (int)$pIRId;
+		$this->mContentId = (int)$pContentId;
 		$this->mContentTypeGuid = IRLIST_CONTENT_TYPE_GUID;
 	}
 
@@ -38,7 +48,8 @@ class IRList extends LibertyContent {
 	 * (Describe IRList object here )
 	 */
 	function load($pContentId = NULL) {
-		if ( $pContentId ) $this->mContentId = $pContentId;
+		if ( $pContentId ) $this->mContentId = (int)$pContentId;
+		if( $this->verifyId( $this->mContentId ) ) {
 			$query = "select ir.*, tc.*,
 				uue.`login` AS modifier_user, uue.`real_name` AS modifier_real_name,
 				uuc.`login` AS creator_user, uuc.`real_name` AS creator_real_name,
@@ -53,12 +64,14 @@ class IRList extends LibertyContent {
 
 			if ( $result && $result->numRows() ) {
 				$this->mInfo = $result->fields;
-				$this->mContentId = $result->fields['content_id'];
+				$this->mContentId = (int)$result->fields['content_id'];
+				$this->mIRId = (int)$result->fields['ir_id'];
 				$this->mIRName = $result->fields['title'];
 				$this->mInfo['creator'] = (isset( $result->fields['creator_real_name'] ) ? $result->fields['creator_real_name'] : $result->fields['creator_user'] );
 				$this->mInfo['editor'] = (isset( $result->fields['modifier_real_name'] ) ? $result->fields['modifier_real_name'] : $result->fields['modifier_user'] );
 				$this->mInfo['display_url'] = $this->getDisplayUrl();
 			}
+		}
 		LibertyContent::load();
 		return;
 	}
@@ -71,8 +84,8 @@ class IRList extends LibertyContent {
 	**/
 	function verify( &$pParamHash ) {
 		// make sure we're all loaded up if everything is valid
-		if( $this->isValid() && empty( $this->mInfo ) ) {
-			$this->load( TRUE );
+		if( $this->isValid( $this->mContentId ) && empty( $this->mInfo ) ) {
+			$this->load();
 		}
 
 		// It is possible a derived class set this to something different
@@ -80,7 +93,7 @@ class IRList extends LibertyContent {
 			$pParamHash['content_type_guid'] = $this->mContentTypeGuid;
 		}
 
-		if( !empty( $this->mContentId ) ) {
+		if( $this->isValid( $this->mContentId ) ) {
 			$pParamHash['content_id'] = $this->mContentId;
 		} else {
 			unset( $pParamHash['content_id'] );
@@ -117,13 +130,10 @@ class IRList extends LibertyContent {
 	}
 
 	/**
-	* Store pigeonhole data
-	* @param $pParamHash contains all data to store the pigeonholes
-	* @param $pParamHash[title] title of the new pigeonhole
-	* @param $pParamHash[edit] description of the pigeonhole
-	* @param $pParamHash[members] array of content_ids that are associated with this pigeonhole
-	* @param $pParamHash[root_structure_id] if this is set, it will add the pigeonhole to this structure. if it's not set, a new structure / top level pigeonhole is created
-	* @param $pParamHash[parent_id] set the structure_id that will server as the parent in the structure
+	* Store incident report data
+	* @param $pParamHash contains all data to store the IR
+	* @param $pParamHash[title] title of the new IR
+	* @param $pParamHash[edit] description of the IR
 	* @return bool TRUE on success, FALSE if store could not occur. If FALSE, $this->mErrors will have reason why
 	* @access public
 	**/
@@ -133,16 +143,17 @@ class IRList extends LibertyContent {
 			$this->mDb->StartTrans();
 		    if ( LibertyContent::store( $pParamHash ) ) {
 				$table = BIT_DB_PREFIX."bit_irlist_secondary";
-
 				// mContentId will not be set until the secondary data has commited 
-				if( $this->mContentId ) {
+				// What happened to THAT rule ???
+vd( $this->mIRId );
+				if( $this->verifyId( $this->mIRId ) ) {
 					if( !empty( $pParamHash['secondary_store'] ) ) {
 						$locId = array ( "name" => "content_id", "value" => $this->mContentId );
 						$result = $this->mDb->associateUpdate( $table, $pParamHash['secondary_store'], $locId );
 					}
 				} else {
 					$pParamHash['secondary_store']['content_id'] = $pParamHash['content_id'];
-					if( isset( $pParamHash['ir_id'] ) && is_numeric( $pParamHash['ir_id'] ) ) {
+					if( @$this->verifyId( $pParamHash['secondary_store']['ir_id'] ) ) {
 						$pParamHash['secondary_store']['ir_id'] = $pParamHash['ir_id'];
 					} else {
 						$pParamHash['secondary_store']['ir_id'] = $this->mDb->GenID( 'bit_ir_id_seq');
@@ -290,8 +301,8 @@ class IRList extends LibertyContent {
 		}
 		$retval = array();
 		$retval["data"] = $ret;
-		$query_cant = "SELECT COUNT(ir.`ir_id`) FROM `".BIT_DB_PREFIX."bit_irlist_secondary` ir $mid";
 
+		$query_cant = "SELECT COUNT(ir.`ir_id`) FROM `".BIT_DB_PREFIX."bit_irlist_secondary` ir $mid";
 		$cant = $this->mDb->getOne($query_cant, $bindvars);
 		$retval["cant"] = $cant;
 		return $retval;
