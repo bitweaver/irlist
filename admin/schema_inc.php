@@ -39,4 +39,13 @@ $gBitInstaller->registerUserPermissions( IRLIST_PKG_NAME, array(
 	array('bit_p_edit_irlist', 'Can edit the IR List', 'registered', IRLIST_PKG_NAME),
 ) );
 
+// ### Default Preferences
+$gBitInstaller->registerPreferences( IRLIST_PKG_NAME, array(
+	array( IRLIST_PKG_NAME, 'ir_left_created','y'),
+	array( IRLIST_PKG_NAME, 'ir_list_lastmodif','y'),
+	array( IRLIST_PKG_NAME, 'ir_list_notes','y'),
+	array( IRLIST_PKG_NAME, 'ir_list_title','y'),
+	array( IRLIST_PKG_NAME, 'ir_list_user','y'),
+) );
+
 ?>
