@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_irlist/IRList.php,v 1.2 2006/01/16 06:42:14 lsces Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_irlist/IRList.php,v 1.3 2006/01/31 20:17:56 bitweaver Exp $
  *
  * Copyright ( c ) 2006 bitweaver.org
  * All Rights Reserved. See copyright.txt for details and a complete list of authors.
@@ -265,7 +265,7 @@ vd( $this->mIRId );
 
 		if ($find) {
 			$findesc = '%' . strtoupper( $find ) . '%';
-			$mid = " WHERE (UPPER(tb.`title`) like ? or UPPER(tb.`description`) like ?) ";
+			$mid = " WHERE (UPPER(b.`title`) like ? or UPPER(b.`description`) like ?) ";
 			$bindvars=array($findesc,$findesc);
 		} else {
 			$mid = '';
