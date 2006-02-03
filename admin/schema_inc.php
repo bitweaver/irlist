@@ -1,7 +1,7 @@
 <?php
 $tables = array(
 
-'bit_irlist_secondary' => "
+'irlist_secondary' => "
   ir_id I4 PRIMARY,
   parent_id I4 NOTNULL,
   content_id I4 NOTNULL,
@@ -35,8 +35,8 @@ $gBitInstaller->registerPackageInfo( IRLIST_PKG_NAME, array(
 
 // ### Default User Permissions
 $gBitInstaller->registerUserPermissions( IRLIST_PKG_NAME, array(
-	array('bit_p_view_irlist', 'Can browse the IR List', 'basic', IRLIST_PKG_NAME),
-	array('bit_p_edit_irlist', 'Can edit the IR List', 'registered', IRLIST_PKG_NAME),
+	array('p_view_irlist', 'Can browse the IR List', 'basic', IRLIST_PKG_NAME),
+	array('p_edit_irlist', 'Can edit the IR List', 'registered', IRLIST_PKG_NAME),
 ) );
 
 // ### Default Preferences

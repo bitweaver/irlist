@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_irlist/list.php,v 1.1 2005/09/19 13:47:49 lsces Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_irlist/list.php,v 1.2 2006/02/03 08:31:28 lsces Exp $
  * @package blogs
  * @subpackage functions
  */
@@ -14,7 +14,7 @@ include_once( IRLIST_PKG_PATH.'IRList.php' );
 
 $gBitSystem->verifyPackage( 'irlist' );
 
-$gBitSystem->verifyPermission( 'bit_p_read_irlist' );
+$gBitSystem->verifyPermission( 'p_read_irlist' );
 
 $gContent = new IRList();
 /*

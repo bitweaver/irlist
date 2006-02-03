@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_irlist/IRList.php,v 1.3 2006/01/31 20:17:56 bitweaver Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_irlist/IRList.php,v 1.4 2006/02/03 08:31:28 lsces Exp $
  *
  * Copyright ( c ) 2006 bitweaver.org
  * All Rights Reserved. See copyright.txt for details and a complete list of authors.
@@ -54,8 +54,8 @@ class IRList extends LibertyContent {
 				uue.`login` AS modifier_user, uue.`real_name` AS modifier_real_name,
 				uuc.`login` AS creator_user, uuc.`real_name` AS creator_real_name,
 				uux.`login` AS closed_user, uuc.`real_name` AS closed_real_name
-				FROM `".BIT_DB_PREFIX."bit_irlist_secondary` ir
-				INNER JOIN `".BIT_DB_PREFIX."tiki_content` tc ON ( tc.`content_id` = ir.`content_id` )
+				FROM `".BIT_DB_PREFIX."irlist_secondary` ir
+				INNER JOIN `".BIT_DB_PREFIX."content` tc ON ( tc.`content_id` = ir.`content_id` )
 				LEFT JOIN `".BIT_DB_PREFIX."users_users` uue ON (uue.`user_id` = tc.`modifier_user_id`)
 				LEFT JOIN `".BIT_DB_PREFIX."users_users` uuc ON (uuc.`user_id` = tc.`user_id`)
 				LEFT JOIN `".BIT_DB_PREFIX."users_users` uux ON (uux.`user_id` = ir.`closed_user_id`)
@@ -142,10 +142,9 @@ class IRList extends LibertyContent {
 			// Start a transaction wrapping the whole insert into liberty 
 			$this->mDb->StartTrans();
 		    if ( LibertyContent::store( $pParamHash ) ) {
-				$table = BIT_DB_PREFIX."bit_irlist_secondary";
+				$table = BIT_DB_PREFIX."irlist_secondary";
 				// mContentId will not be set until the secondary data has commited 
 				// What happened to THAT rule ???
-vd( $this->mIRId );
 				if( $this->verifyId( $this->mIRId ) ) {
 					if( !empty( $pParamHash['secondary_store'] ) ) {
 						$locId = array ( "name" => "content_id", "value" => $this->mContentId );
@@ -156,7 +155,7 @@ vd( $this->mIRId );
 					if( @$this->verifyId( $pParamHash['secondary_store']['ir_id'] ) ) {
 						$pParamHash['secondary_store']['ir_id'] = $pParamHash['ir_id'];
 					} else {
-						$pParamHash['secondary_store']['ir_id'] = $this->mDb->GenID( 'bit_ir_id_seq');
+						$pParamHash['secondary_store']['ir_id'] = $this->mDb->GenID( 'ir_id_seq');
 					}	
 					$pParamHash['secondary_store']['parent_id'] = $pParamHash['secondary_store']['content_id'];
 					$this->mIRId = $pParamHash['secondary_store']['ir_id'];
@@ -181,7 +180,7 @@ vd( $this->mIRId );
 		$ret = FALSE;
 		if ($this->isValid() ) {
 			$this->mDb->StartTrans();
-			$query = "DELETE FROM `".BIT_DB_PREFIX."bit_samples` WHERE `content_id` = ?";
+			$query = "DELETE FROM `".BIT_DB_PREFIX."irlist` WHERE `content_id` = ?";
 			$result = $this->mDb->query($query, array($this->mContentId ) );
 			if (LibertyAttachable::expunge() ) {
 			$ret = TRUE;
@@ -284,8 +283,8 @@ vd( $this->mIRId );
 				uue.`login` AS modifier_user, uue.`real_name` AS modifier_real_name,
 				uuc.`login` AS creator_user, uuc.`real_name` AS creator_real_name,
 				uux.`login` AS closed_user, uuc.`real_name` AS closed_real_name
-				FROM `".BIT_DB_PREFIX."bit_irlist_secondary` ir
-				INNER JOIN `".BIT_DB_PREFIX."tiki_content` tc ON ( tc.`content_id` = ir.`content_id` )
+				FROM `".BIT_DB_PREFIX."irlist_secondary` ir
+				INNER JOIN `".BIT_DB_PREFIX."content` tc ON ( tc.`content_id` = ir.`content_id` )
 				LEFT JOIN `".BIT_DB_PREFIX."users_users` uue ON (uue.`user_id` = tc.`modifier_user_id`)
 				LEFT JOIN `".BIT_DB_PREFIX."users_users` uuc ON (uuc.`user_id` = tc.`user_id`)
 				LEFT JOIN `".BIT_DB_PREFIX."users_users` uux ON (uux.`user_id` = ir.`closed_user_id`)
@@ -302,7 +301,7 @@ vd( $this->mIRId );
 		$retval = array();
 		$retval["data"] = $ret;
 
-		$query_cant = "SELECT COUNT(ir.`ir_id`) FROM `".BIT_DB_PREFIX."bit_irlist_secondary` ir $mid";
+		$query_cant = "SELECT COUNT(ir.`ir_id`) FROM `".BIT_DB_PREFIX."irlist_secondary` ir $mid";
 		$cant = $this->mDb->getOne($query_cant, $bindvars);
 		$retval["cant"] = $cant;
 		return $retval;
@@ -318,7 +317,7 @@ vd( $this->mIRId );
 		if ($project) {
 			$mid = "WHERE `project_name` STARTING '$project'";
 		} else { $mid = ''; }
-		$query = "SELECT DISTINCT `project_name` FROM `bit_irlist_secondary`
+		$query = "SELECT DISTINCT `project_name` FROM `irlist_secondary`
 				  $mid ORDER BY `project_name`";
 		$result = $this->mDb->query($query);
 		$ret = array();
