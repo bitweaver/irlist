@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_irlist/IRList.php,v 1.5 2006/02/06 10:18:45 lsces Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_irlist/IRList.php,v 1.6 2006/02/06 18:22:10 lsces Exp $
  *
  * Copyright ( c ) 2006 bitweaver.org
  * All Rights Reserved. See copyright.txt for details and a complete list of authors.
@@ -262,6 +262,10 @@ $this->mDb->debug = 99;
 	*/
 	function getList(&$pParamHash) {
 		global $gBitSystem;
+
+		if( empty( $pParamHash["sort_mode"] ) ) {
+			$pParamHash["sort_mode"] = 'ir_id_desc';
+		}
 		LibertyContent::prepGetList( $pParamHash );
 
 		// this will set $find, $sort_mode, $max_records and $offset
@@ -276,7 +280,22 @@ $this->mDb->debug = 99;
 			$bindvars=array();
 		}
 
-		if ( isset($add_sql) ) {
+		if (isset($project) and $project != "          ") {
+			$add_sql = "`project_name` = '".$project."'";
+			if ($status != "A") {
+				$add_sql .= " AND `status` = '".$status."'"; 
+			}
+			if ($priority != "A") {
+				$add_sql .= " AND `priority` = ".$priority; 
+			}
+			if (!isset($version) ) {
+				$version = '';
+			}
+			$pParamHash['control']['ihash']['project'] = trim($project);
+			$pParamHash['control']['ihash']['status'] = $status;
+			$pParamHash['control']['ihash']['priority'] = $priority;
+			$pParamHash['control']['ihash']['version'] = trim($version);
+
 			if (strlen($mid) > 1) {
 				$mid .= ' AND '.$add_sql.' ';
 			} else {

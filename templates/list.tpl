@@ -15,20 +15,23 @@
 			<ul>
 				<li>{biticon ipackage=liberty iname=sort iexplain="sort by"}</li>
 				{if $gBitSystem->isFeatureActive( 'ir_list_title' )}
-					<li>{smartlink ititle="IR Number" isort="ir_id" idefault=1 iorder=desc offset=$offset ihash=$ihash}</li>
-					<li>{smartlink ititle="Title" isort="title" offset=$offset ihash=$ihash}</li>
+					<li>{smartlink ititle="IR Number" isort="ir_id" idefault=1 iorder=desc offset=$offset ihash=$listInfo.ihash}</li>
+					<li>{smartlink ititle="Title" isort="title" offset=$offset ihash=$listInfo.ihash}</li>
 				{/if}
 				{if $gBitSystem->isFeatureActive( 'ir_list_created' )}
-					<li>{smartlink ititle="Created" isort="created" iorder=desc offset=$offset ihash=$ihash}</li>
+					<li>{smartlink ititle="Created" isort="created" iorder=desc offset=$offset ihash=$listInfo.ihash}</li>
 				{/if}
 				{if $gBitSystem->isFeatureActive( 'ir_list_lastmodif' )}
-					<li>{smartlink ititle="Last Modified" isort="last_modified" iorder=desc offset=$offset ihash=$ihash}</li>
+					<li>{smartlink ititle="Last Modified" isort="last_modified" iorder=desc offset=$offset ihash=$listInfo.ihash}</li>
 				{/if}
 				{if $gBitSystem->isFeatureActive( 'ir_list_user' )}
-					<li>{smartlink ititle="Creator" isort="user" offset=$offset ihash=$ihash}</li>
+					<li>{smartlink ititle="Creator" isort="user" offset=$offset ihash=$listInfo.ihash}</li>
 				{/if}
-				{if $gBitSystem->isFeatureActive( 'ir_list_notes' )}
-					<li>{smartlink ititle="Notes" isort="notes" iorder=desc offset=$offset ihash=$ihash}</li>
+				{if $gBitSystem->isFeatureActive( 'ir_list_project' )}
+					<li>{smartlink ititle="Project" isort="project_name" iorder=desc offset=$offset ihash=$listInfo.ihash}</li>
+				{/if}
+				{if $gBitSystem->isFeatureActive( 'ir_list_version' )}
+					<li>{smartlink ititle="Version" isort="revision" iorder=desc offset=$offset ihash=$listInfo.ihash}</li>
 				{/if}
 			</ul>
 		</div>
@@ -96,7 +99,7 @@
 			{/foreach}
 		</ul>
 
-		{libertypagination numPages=$cant_pages page=$actual_page ihash=$ihash}
+		{pagination ihash=$listInfo.ihash}
 	</div><!-- end .body -->
 </div><!-- end .irlist -->
 
