@@ -7,7 +7,9 @@ $tables = array(
   content_id I4 NOTNULL,
   project_name	C(10),
   revision C(10),
-  closed I4,
+  assigned I8,
+  assigned_user_id I4,
+  closed I8,
   closed_user_id I4,
   status C(5),
   priority I2
@@ -26,10 +28,17 @@ foreach( array_keys( $tables ) AS $tableName ) {
 $gBitInstaller->registerPackageInfo( IRLIST_PKG_NAME, array(
 	'description' => "Incident Report Tracker with management of project reports",
 	'license' => '<a href="http://www.gnu.org/licenses/licenses.html#LGPL">LGPL</a>',
-	'version' => '0.1',
+	'version' => '0.2',
 	'state' => 'beta',
 	'dependencies' => '',
 ) );
+
+// ### Sequences
+$sequences = array (
+	'ir_id_seq' => array( 'start' => 1 )
+);
+
+$gBitInstaller->registerSchemaSequences( IRLIST_PKG_NAME, $sequences );
 
 // ### Defaults
 

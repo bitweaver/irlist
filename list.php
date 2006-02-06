@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_irlist/list.php,v 1.2 2006/02/03 08:31:28 lsces Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_irlist/list.php,v 1.3 2006/02/06 10:18:45 lsces Exp $
  * @package blogs
  * @subpackage functions
  */
@@ -17,22 +17,6 @@ $gBitSystem->verifyPackage( 'irlist' );
 $gBitSystem->verifyPermission( 'p_read_irlist' );
 
 $gContent = new IRList();
-/*
-if($feature_listPages != 'y') {
-  $gBitSmarty->assign('msg',tra("This feature is disabled"));
-  $gBitSystem->display( 'error.tpl' );
-  die;
-}
-*/
-
-/*
-// Now check permissions to access this page
-if(!$gBitUser->( 'bit_p_view' )) {
-  $gBitSmarty->assign('msg',tra("Permission denied you cannot view pages"));
-  $gBitSystem->display( 'error.tpl' );
-  die;
-}
-*/
 
 if( empty( $_REQUEST["sort_mode"] ) ) {
 	$sort_mode = 'ir_id_desc';
@@ -85,25 +69,7 @@ if (isset($_REQUEST["project"]) and $_REQUEST["project"] != "          ") {
 }
 
 // Get a list of matching IR entries
-$listirs = $gContent->getList($offset, $maxRecords, $sort_mode, $find, $add_sql);
-
-// If there're more records then assign next_offset
-$cant_pages = ceil($listirs["cant"] / $maxRecords);
-$gBitSmarty->assign_by_ref('cant_pages', $cant_pages);
-$gBitSmarty->assign('actual_page', 1 + ($offset / $maxRecords));
-
-if ($listirs["cant"] > ($offset + $maxRecords)) {
-	$gBitSmarty->assign('next_offset', $offset + $maxRecords);
-} else {
-	$gBitSmarty->assign('next_offset', -1);
-}
-
-// If offset is > 0 then prev_offset
-if ($offset > 0) {
-	$gBitSmarty->assign('prev_offset', $offset - $maxRecords);
-} else {
-	$gBitSmarty->assign('prev_offset', -1);
-}
+$listirs = $gContent->getList( $_REQUEST );
 
 include_once( IRLIST_PKG_PATH.'display_list_header.php' );
 

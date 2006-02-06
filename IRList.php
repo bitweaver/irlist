@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_irlist/IRList.php,v 1.4 2006/02/03 08:31:28 lsces Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_irlist/IRList.php,v 1.5 2006/02/06 10:18:45 lsces Exp $
  *
  * Copyright ( c ) 2006 bitweaver.org
  * All Rights Reserved. See copyright.txt for details and a complete list of authors.
@@ -50,16 +50,16 @@ class IRList extends LibertyContent {
 	function load($pContentId = NULL) {
 		if ( $pContentId ) $this->mContentId = (int)$pContentId;
 		if( $this->verifyId( $this->mContentId ) ) {
-			$query = "select ir.*, tc.*,
+			$query = "select ir.*, lc.*,
 				uue.`login` AS modifier_user, uue.`real_name` AS modifier_real_name,
 				uuc.`login` AS creator_user, uuc.`real_name` AS creator_real_name,
 				uux.`login` AS closed_user, uuc.`real_name` AS closed_real_name
 				FROM `".BIT_DB_PREFIX."irlist_secondary` ir
-				INNER JOIN `".BIT_DB_PREFIX."content` tc ON ( tc.`content_id` = ir.`content_id` )
-				LEFT JOIN `".BIT_DB_PREFIX."users_users` uue ON (uue.`user_id` = tc.`modifier_user_id`)
-				LEFT JOIN `".BIT_DB_PREFIX."users_users` uuc ON (uuc.`user_id` = tc.`user_id`)
+				INNER JOIN `".BIT_DB_PREFIX."liberty_content` lc ON ( lc.`content_id` = ir.`content_id` )
+				LEFT JOIN `".BIT_DB_PREFIX."users_users` uue ON (uue.`user_id` = lc.`modifier_user_id`)
+				LEFT JOIN `".BIT_DB_PREFIX."users_users` uuc ON (uuc.`user_id` = lc.`user_id`)
 				LEFT JOIN `".BIT_DB_PREFIX."users_users` uux ON (uux.`user_id` = ir.`closed_user_id`)
-				WHERE tc.`content_id`=?";
+				WHERE lc.`content_id`=?";
 			$result = $this->mDb->query( $query, array( $this->mContentId ) );
 
 			if ( $result && $result->numRows() ) {
@@ -138,6 +138,7 @@ class IRList extends LibertyContent {
 	* @access public
 	**/
 	function store( &$pParamHash ) {
+$this->mDb->debug = 99;
 		if( $this->verify( $pParamHash ) ) {
 			// Start a transaction wrapping the whole insert into liberty 
 			$this->mDb->StartTrans();
@@ -259,8 +260,12 @@ class IRList extends LibertyContent {
 	* @param integer 
 	* @return string Text for the title description
 	*/
-	function getList($offset = 0, $maxRecords = -1, $sort_mode = 'created_desc', $find = '', $add_sql = '') {
+	function getList(&$pParamHash) {
 		global $gBitSystem;
+		LibertyContent::prepGetList( $pParamHash );
+
+		// this will set $find, $sort_mode, $max_records and $offset
+		extract( $pParamHash );
 
 		if ($find) {
 			$findesc = '%' . strtoupper( $find ) . '%';
@@ -271,7 +276,7 @@ class IRList extends LibertyContent {
 			$bindvars=array();
 		}
 
-		if ($add_sql) {
+		if ( isset($add_sql) ) {
 			if (strlen($mid) > 1) {
 				$mid .= ' AND '.$add_sql.' ';
 			} else {
@@ -279,18 +284,18 @@ class IRList extends LibertyContent {
 			}
 		}
 
-		$query = "SELECT ir.*, tc.*, 
+		$query = "SELECT ir.*, lc.*, 
 				uue.`login` AS modifier_user, uue.`real_name` AS modifier_real_name,
 				uuc.`login` AS creator_user, uuc.`real_name` AS creator_real_name,
 				uux.`login` AS closed_user, uuc.`real_name` AS closed_real_name
 				FROM `".BIT_DB_PREFIX."irlist_secondary` ir
-				INNER JOIN `".BIT_DB_PREFIX."content` tc ON ( tc.`content_id` = ir.`content_id` )
-				LEFT JOIN `".BIT_DB_PREFIX."users_users` uue ON (uue.`user_id` = tc.`modifier_user_id`)
-				LEFT JOIN `".BIT_DB_PREFIX."users_users` uuc ON (uuc.`user_id` = tc.`user_id`)
+				INNER JOIN `".BIT_DB_PREFIX."liberty_content` lc ON ( lc.`content_id` = ir.`content_id` )
+				LEFT JOIN `".BIT_DB_PREFIX."users_users` uue ON (uue.`user_id` = lc.`modifier_user_id`)
+				LEFT JOIN `".BIT_DB_PREFIX."users_users` uuc ON (uuc.`user_id` = lc.`user_id`)
 				LEFT JOIN `".BIT_DB_PREFIX."users_users` uux ON (uux.`user_id` = ir.`closed_user_id`)
 				$mid order by ".$this->mDb->convert_sortmode($sort_mode);
 
-		$result = $this->mDb->query($query,$bindvars,$maxRecords,$offset);
+		$result = $this->mDb->query( $query ,$bindvars ,$max_records ,$offset );
 
 		$ret = array();
 
@@ -298,13 +303,14 @@ class IRList extends LibertyContent {
 			$res['irlist_url'] = $this->getDisplayUrl( $res['content_id'] );
 			$ret[] = $res;
 		}
-		$retval = array();
-		$retval["data"] = $ret;
 
+		// Get total result count
 		$query_cant = "SELECT COUNT(ir.`ir_id`) FROM `".BIT_DB_PREFIX."irlist_secondary` ir $mid";
-		$cant = $this->mDb->getOne($query_cant, $bindvars);
-		$retval["cant"] = $cant;
-		return $retval;
+		$pParamHash["cant"] = $this->mDb->getOne($query_cant, $bindvars);
+
+		// add all pagination info to pParamHash
+		LibertyContent::postGetList( $pParamHash );
+		return $ret;
 	}
 
 	/**

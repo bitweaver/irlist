@@ -1,6 +1,6 @@
 <?php
 /**
- * $Header: /cvsroot/bitweaver/_bit_irlist/display_list_header.php,v 1.1 2005/09/19 13:47:49 lsces Exp $
+ * $Header: /cvsroot/bitweaver/_bit_irlist/display_list_header.php,v 1.2 2006/02/06 10:18:45 lsces Exp $
  *
  * Copyright ( c ) 2004 bitweaver.org
  * All Rights Reserved. See copyright.txt for details and a complete list of authors.
@@ -11,7 +11,7 @@
  */
 
 $project_array = $gContent->getProjectList();
-$gBitSmarty->assign('project_array', $project_array["data"]);
+$gBitSmarty->assign_by_ref('project_array', $project_array["data"]);
 
 $status_array = array();
 $status_array_p = array();
@@ -34,7 +34,7 @@ $priority_array[] = '3';
 $gBitSmarty->assign('priority_array', $priority_array);
 $gBitSmarty->assign('priority_array_p', $priority_array);
 
-$gBitSmarty->assign_by_ref('listirs', $listirs["data"]);
+$gBitSmarty->assign_by_ref('listirs', $listirs);
 $section = 'irlist';
 
 ?>
