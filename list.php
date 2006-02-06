@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_irlist/list.php,v 1.4 2006/02/06 18:22:10 lsces Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_irlist/list.php,v 1.5 2006/02/06 21:35:17 lsces Exp $
  * @package blogs
  * @subpackage functions
  */
@@ -21,7 +21,7 @@ $gContent = new IRList();
 // Get a list of matching IR entries
 $listirs = $gContent->getList( $_REQUEST );
 include_once( IRLIST_PKG_PATH.'display_list_header.php' );
-$gBitSmarty->assign_by_ref( 'listInfo', $_REQUEST["control"] );
+$gBitSmarty->assign_by_ref( 'listInfo', $_REQUEST['listInfo'] );
 
 $gBitSystem->setBrowserTitle("View Incident Reports List");
 // Display the template
