@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_irlist/IRList.php,v 1.6 2006/02/06 18:22:10 lsces Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_irlist/IRList.php,v 1.7 2006/02/06 18:43:08 lsces Exp $
  *
  * Copyright ( c ) 2006 bitweaver.org
  * All Rights Reserved. See copyright.txt for details and a complete list of authors.
@@ -291,10 +291,10 @@ $this->mDb->debug = 99;
 			if (!isset($version) ) {
 				$version = '';
 			}
-			$pParamHash['control']['ihash']['project'] = trim($project);
-			$pParamHash['control']['ihash']['status'] = $status;
-			$pParamHash['control']['ihash']['priority'] = $priority;
-			$pParamHash['control']['ihash']['version'] = trim($version);
+			$pParamHash['listInfo']['ihash']['project'] = trim($project);
+			$pParamHash['listInfo']['ihash']['status'] = $status;
+			$pParamHash['listInfo']['ihash']['priority'] = $priority;
+			$pParamHash['listInfo']['ihash']['version'] = trim($version);
 
 			if (strlen($mid) > 1) {
 				$mid .= ' AND '.$add_sql.' ';
