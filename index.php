@@ -1,6 +1,6 @@
 <?php
 
-// $Header: /cvsroot/bitweaver/_bit_irlist/index.php,v 1.1 2005/09/19 13:47:49 lsces Exp $
+// $Header: /cvsroot/bitweaver/_bit_irlist/index.php,v 1.2 2006/02/06 11:34:31 lsces Exp $
 
 // Copyright (c) 2002-2003, Luis Argerich, Garland Foster, Eduardo Polidor, et. al.
 // All Rights Reserved. See copyright.txt for details and a complete list of authors.
@@ -18,7 +18,7 @@ if( !empty( $_REQUEST['content_id'] ) ) {
 }
 
 // Comments engine!
-if( $gBitSystem->isFeatureActive( 'feature_wiki_comments' ) ) {
+if( $gBitSystem->isFeatureActive( 'irlist_comments' ) ) {
 	$comments_vars = Array('page');
 	$comments_prefix_var='ir note:';
 	$comments_object_var='page';
