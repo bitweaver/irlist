@@ -50,9 +50,10 @@ $gBitInstaller->registerUserPermissions( IRLIST_PKG_NAME, array(
 
 // ### Default Preferences
 $gBitInstaller->registerPreferences( IRLIST_PKG_NAME, array(
-	array( IRLIST_PKG_NAME, 'ir_left_created','y'),
+	array( IRLIST_PKG_NAME, 'ir_list_created','y'),
 	array( IRLIST_PKG_NAME, 'ir_list_lastmodif','y'),
-	array( IRLIST_PKG_NAME, 'ir_list_notes','y'),
+	array( IRLIST_PKG_NAME, 'ir_list_project','y'),
+	array( IRLIST_PKG_NAME, 'ir_list_version','y'),
 	array( IRLIST_PKG_NAME, 'ir_list_title','y'),
 	array( IRLIST_PKG_NAME, 'ir_list_user','y'),
 	array( IRLIST_PKG_NAME, 'irlist_comments','y'),
