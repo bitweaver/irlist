@@ -55,6 +55,7 @@ $gBitInstaller->registerPreferences( IRLIST_PKG_NAME, array(
 	array( IRLIST_PKG_NAME, 'ir_list_notes','y'),
 	array( IRLIST_PKG_NAME, 'ir_list_title','y'),
 	array( IRLIST_PKG_NAME, 'ir_list_user','y'),
+	array( IRLIST_PKG_NAME, 'irlist_comments','y'),
 ) );
 
 ?>
