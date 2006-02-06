@@ -99,7 +99,7 @@
 			{/foreach}
 		</ul>
 
-		{pagination}
+		{pagination ihash=$listInfo.ihash}
 	</div><!-- end .body -->
 </div><!-- end .irlist -->
 
