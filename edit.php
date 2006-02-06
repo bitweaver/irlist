@@ -1,6 +1,6 @@
 <?php
 /**
- * $Header: /cvsroot/bitweaver/_bit_irlist/edit.php,v 1.2 2006/01/16 06:42:14 lsces Exp $
+ * $Header: /cvsroot/bitweaver/_bit_irlist/edit.php,v 1.3 2006/02/06 22:56:45 squareing Exp $
  *
  * Copyright (c) 2006 bitweaver.org
  * All Rights Reserved. See copyright.txt for details and a complete list of authors.
@@ -164,7 +164,7 @@ if ($gBitSystem->isPackageActive( 'quicktags' ) ) {
 	include_once( QUICKTAGS_PKG_PATH.'quicktags_inc.php' );
 }
 
-if ($gBitSystem->isFeatureActive( 'feature_theme_control' ) ) {
+if ($gBitSystem->isFeatureActive( 'theme_control' ) ) {
 	include( THEMES_PKG_PATH.'tc_inc.php' );
 }
 
