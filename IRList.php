@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_irlist/IRList.php,v 1.7 2006/02/06 18:43:08 lsces Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_irlist/IRList.php,v 1.8 2006/02/09 13:11:10 lsces Exp $
  *
  * Copyright ( c ) 2006 bitweaver.org
  * All Rights Reserved. See copyright.txt for details and a complete list of authors.
@@ -261,7 +261,7 @@ $this->mDb->debug = 99;
 	* @return string Text for the title description
 	*/
 	function getList(&$pParamHash) {
-		global $gBitSystem;
+		global $gBitSystem, $gBitUser;
 
 		if( empty( $pParamHash["sort_mode"] ) ) {
 			$pParamHash["sort_mode"] = 'ir_id_desc';
@@ -302,7 +302,12 @@ $this->mDb->debug = 99;
 				$mid = "WHERE $add_sql ";
 			}
 		}
-
+		if( !$gBitSystem->isPackageActive( 'gatekeeper' ) ) { 
+			$groups = array_keys($gBitUser->mGroups);
+			$mid .= ( empty( $mid ) ? " WHERE " : " AND " )." lc.`group_id` IN ( ".implode( ',',array_fill ( 0, count( $groups ),'?' ) )." )";
+			$bindvars = array_merge( $bindvars, $groups );
+		}		
+		
 		$query = "SELECT ir.*, lc.*, 
 				uue.`login` AS modifier_user, uue.`real_name` AS modifier_real_name,
 				uuc.`login` AS creator_user, uuc.`real_name` AS creator_real_name,
@@ -324,7 +329,8 @@ $this->mDb->debug = 99;
 		}
 
 		// Get total result count
-		$query_cant = "SELECT COUNT(ir.`ir_id`) FROM `".BIT_DB_PREFIX."irlist_secondary` ir $mid";
+		$query_cant = "SELECT COUNT(ir.`ir_id`) FROM `".BIT_DB_PREFIX."irlist_secondary` ir
+				INNER JOIN `".BIT_DB_PREFIX."liberty_content` lc ON ( lc.`content_id` = ir.`content_id` ) $mid";
 		$pParamHash["cant"] = $this->mDb->getOne($query_cant, $bindvars);
 
 		// add all pagination info to pParamHash
