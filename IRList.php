@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_irlist/IRList.php,v 1.8 2006/02/09 13:11:10 lsces Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_irlist/IRList.php,v 1.9 2006/02/10 11:32:46 lsces Exp $
  *
  * Copyright ( c ) 2006 bitweaver.org
  * All Rights Reserved. See copyright.txt for details and a complete list of authors.
@@ -49,18 +49,25 @@ class IRList extends LibertyContent {
 	 */
 	function load($pContentId = NULL) {
 		if ( $pContentId ) $this->mContentId = (int)$pContentId;
-		if( $this->verifyId( $this->mContentId ) ) {
+		if( @$this->verifyId( $this->mIRId ) || @$this->verifyId( $this->mContentId ) ) {
+			$lookupColumn = @$this->verifyId( $this->mIRId ) ? 'ir_id' : 'content_id';
+
+			$bindVars = array(); $selectSql = ''; $joinSql = ''; $whereSql = '';
+			array_push( $bindVars, $lookupId = @BitBase::verifyId( $this->mIRId )? $this->mIRId : $this->mContentId );
+			$this->getServicesSql( 'content_load_function', $selectSql, $joinSql, $whereSql, $bindVars );
+
 			$query = "select ir.*, lc.*,
 				uue.`login` AS modifier_user, uue.`real_name` AS modifier_real_name,
 				uuc.`login` AS creator_user, uuc.`real_name` AS creator_real_name,
 				uux.`login` AS closed_user, uuc.`real_name` AS closed_real_name
+				$selectSql
 				FROM `".BIT_DB_PREFIX."irlist_secondary` ir
-				INNER JOIN `".BIT_DB_PREFIX."liberty_content` lc ON ( lc.`content_id` = ir.`content_id` )
+				INNER JOIN `".BIT_DB_PREFIX."liberty_content` lc ON ( lc.`content_id` = ir.`content_id` ) $joinSql
 				LEFT JOIN `".BIT_DB_PREFIX."users_users` uue ON (uue.`user_id` = lc.`modifier_user_id`)
 				LEFT JOIN `".BIT_DB_PREFIX."users_users` uuc ON (uuc.`user_id` = lc.`user_id`)
 				LEFT JOIN `".BIT_DB_PREFIX."users_users` uux ON (uux.`user_id` = ir.`closed_user_id`)
-				WHERE lc.`content_id`=?";
-			$result = $this->mDb->query( $query, array( $this->mContentId ) );
+				WHERE ir.`$lookupColumn`=? $whereSql";
+			$result = $this->mDb->query( $query, $bindVars );
 
 			if ( $result && $result->numRows() ) {
 				$this->mInfo = $result->fields;
@@ -138,7 +145,6 @@ class IRList extends LibertyContent {
 	* @access public
 	**/
 	function store( &$pParamHash ) {
-$this->mDb->debug = 99;
 		if( $this->verify( $pParamHash ) ) {
 			// Start a transaction wrapping the whole insert into liberty 
 			$this->mDb->StartTrans();
@@ -148,8 +154,7 @@ $this->mDb->debug = 99;
 				// What happened to THAT rule ???
 				if( $this->verifyId( $this->mIRId ) ) {
 					if( !empty( $pParamHash['secondary_store'] ) ) {
-						$locId = array ( "name" => "content_id", "value" => $this->mContentId );
-						$result = $this->mDb->associateUpdate( $table, $pParamHash['secondary_store'], $locId );
+						$result = $this->mDb->associateUpdate( $table, $pParamHash['secondary_store'], array ( "content_id" => $this->mContentId ) );
 					}
 				} else {
 					$pParamHash['secondary_store']['content_id'] = $pParamHash['content_id'];
@@ -271,22 +276,26 @@ $this->mDb->debug = 99;
 		// this will set $find, $sort_mode, $max_records and $offset
 		extract( $pParamHash );
 
+		$joinSql = '';
+		$selectSql = '';
+		$whereSql = '';
+		$bindVars = array();
+		array_push( $bindVars, $this->mContentTypeGuid );
+		$this->getServicesSql( 'content_list_function', $selectSql, $joinSql, $whereSql, $bindVars );
+
 		if ($find) {
 			$findesc = '%' . strtoupper( $find ) . '%';
-			$mid = " WHERE (UPPER(b.`title`) like ? or UPPER(b.`description`) like ?) ";
-			$bindvars=array($findesc,$findesc);
-		} else {
-			$mid = '';
-			$bindvars=array();
-		}
+			$whereSql = " AND (UPPER(b.`title`) like ? or UPPER(b.`description`) like ?) ";
+			$bindVars = array( $bindVars, $findesc, $findesc );
+		} 
 
 		if (isset($project) and $project != "          ") {
 			$add_sql = "`project_name` = '".$project."'";
 			if ($status != "A") {
-				$add_sql .= " AND `status` = '".$status."'"; 
+				$whereSql .= " AND `status` = '".$status."'"; 
 			}
 			if ($priority != "A") {
-				$add_sql .= " AND `priority` = ".$priority; 
+				$whereSql .= " AND `priority` = ".$priority; 
 			}
 			if (!isset($version) ) {
 				$version = '';
@@ -295,31 +304,22 @@ $this->mDb->debug = 99;
 			$pParamHash['listInfo']['ihash']['status'] = $status;
 			$pParamHash['listInfo']['ihash']['priority'] = $priority;
 			$pParamHash['listInfo']['ihash']['version'] = trim($version);
-
-			if (strlen($mid) > 1) {
-				$mid .= ' AND '.$add_sql.' ';
-			} else {
-				$mid = "WHERE $add_sql ";
-			}
 		}
-		if( !$gBitSystem->isPackageActive( 'gatekeeper' ) ) { 
-			$groups = array_keys($gBitUser->mGroups);
-			$mid .= ( empty( $mid ) ? " WHERE " : " AND " )." lc.`group_id` IN ( ".implode( ',',array_fill ( 0, count( $groups ),'?' ) )." )";
-			$bindvars = array_merge( $bindvars, $groups );
-		}		
 		
 		$query = "SELECT ir.*, lc.*, 
 				uue.`login` AS modifier_user, uue.`real_name` AS modifier_real_name,
 				uuc.`login` AS creator_user, uuc.`real_name` AS creator_real_name,
 				uux.`login` AS closed_user, uuc.`real_name` AS closed_real_name
+				$selectSql
 				FROM `".BIT_DB_PREFIX."irlist_secondary` ir
-				INNER JOIN `".BIT_DB_PREFIX."liberty_content` lc ON ( lc.`content_id` = ir.`content_id` )
+				INNER JOIN `".BIT_DB_PREFIX."liberty_content` lc ON ( lc.`content_id` = ir.`content_id` ) $joinSql
 				LEFT JOIN `".BIT_DB_PREFIX."users_users` uue ON (uue.`user_id` = lc.`modifier_user_id`)
 				LEFT JOIN `".BIT_DB_PREFIX."users_users` uuc ON (uuc.`user_id` = lc.`user_id`)
 				LEFT JOIN `".BIT_DB_PREFIX."users_users` uux ON (uux.`user_id` = ir.`closed_user_id`)
-				$mid order by ".$this->mDb->convert_sortmode($sort_mode);
+				WHERE lc.`content_type_guid` = ? $whereSql
+				ORDER BY ".$this->mDb->convert_sortmode($sort_mode);
 
-		$result = $this->mDb->query( $query ,$bindvars ,$max_records ,$offset );
+		$result = $this->mDb->query( $query ,$bindVars ,$max_records ,$offset );
 
 		$ret = array();
 
@@ -330,8 +330,9 @@ $this->mDb->debug = 99;
 
 		// Get total result count
 		$query_cant = "SELECT COUNT(ir.`ir_id`) FROM `".BIT_DB_PREFIX."irlist_secondary` ir
-				INNER JOIN `".BIT_DB_PREFIX."liberty_content` lc ON ( lc.`content_id` = ir.`content_id` ) $mid";
-		$pParamHash["cant"] = $this->mDb->getOne($query_cant, $bindvars);
+				INNER JOIN `".BIT_DB_PREFIX."liberty_content` lc ON ( lc.`content_id` = ir.`content_id` ) $joinSql
+				WHERE lc.`content_type_guid` = ? $whereSql";
+		$pParamHash["cant"] = $this->mDb->getOne($query_cant, $bindVars);
 
 		// add all pagination info to pParamHash
 		LibertyContent::postGetList( $pParamHash );

@@ -1,4 +1,4 @@
-{* $Header: /cvsroot/bitweaver/_bit_irlist/templates/edit_page.tpl,v 1.1 2005/09/19 13:47:49 lsces Exp $ *}
+{* $Header: /cvsroot/bitweaver/_bit_irlist/templates/edit_page.tpl,v 1.2 2006/02/10 11:32:46 lsces Exp $ *}
 <div class="floaticon">{bithelp}</div>
 
 {assign var=serviceEditTpls value=$gLibertySystem->getServiceValues('content_edit_tpl')}
@@ -111,20 +111,14 @@
 							</div>
 						{/if}
 
+						{include file="bitpackage:liberty/edit_services_inc.tpl serviceFile=content_edit_mini_tpl}
+
 						<div class="row submit">
 							<input type="submit" name="fCancel" value="{tr}Cancel{/tr}" />&nbsp;
 							<input type="submit" name="fSavePage" value="{tr}Save{/tr}" />
 						</div>
 
 					{/legend}
-				{/jstab}
-
-				{jstab title="Liberty Extensions"}
-					{if $serviceEditTpls.categorization }
-						{legend legend="Categorize"}
-							{include file=$serviceEditTpls.categorization"}
-						{/legend}
-					{/if}
 				{/jstab}
 
 				{jstab title="Advanced Options"}
