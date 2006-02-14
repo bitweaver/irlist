@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_irlist/IRList.php,v 1.9 2006/02/10 11:32:46 lsces Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_irlist/IRList.php,v 1.10 2006/02/14 21:53:25 squareing Exp $
  *
  * Copyright ( c ) 2006 bitweaver.org
  * All Rights Reserved. See copyright.txt for details and a complete list of authors.
@@ -54,7 +54,7 @@ class IRList extends LibertyContent {
 
 			$bindVars = array(); $selectSql = ''; $joinSql = ''; $whereSql = '';
 			array_push( $bindVars, $lookupId = @BitBase::verifyId( $this->mIRId )? $this->mIRId : $this->mContentId );
-			$this->getServicesSql( 'content_load_function', $selectSql, $joinSql, $whereSql, $bindVars );
+			$this->getServicesSql( 'content_load_sql_function', $selectSql, $joinSql, $whereSql, $bindVars );
 
 			$query = "select ir.*, lc.*,
 				uue.`login` AS modifier_user, uue.`real_name` AS modifier_real_name,
@@ -281,7 +281,7 @@ class IRList extends LibertyContent {
 		$whereSql = '';
 		$bindVars = array();
 		array_push( $bindVars, $this->mContentTypeGuid );
-		$this->getServicesSql( 'content_list_function', $selectSql, $joinSql, $whereSql, $bindVars );
+		$this->getServicesSql( 'content_list_sql_function', $selectSql, $joinSql, $whereSql, $bindVars );
 
 		if ($find) {
 			$findesc = '%' . strtoupper( $find ) . '%';
