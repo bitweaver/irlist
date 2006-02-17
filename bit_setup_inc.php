@@ -1,6 +1,11 @@
 <?php
 global $gBitSystem;
-$gBitSystem->registerPackage( 'irlist', dirname(__FILE__).'/' );
+
+$registerHash = array(
+	'package_name' => 'irlist',
+	'package_path' => dirname( __FILE__ ).'/',
+);
+$gBitSystem->registerPackage( $registerHash );
 
 define('IRLIST_CONTENT_TYPE_GUID', 'irlist' );
 
