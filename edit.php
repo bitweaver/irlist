@@ -1,6 +1,6 @@
 <?php
 /**
- * $Header: /cvsroot/bitweaver/_bit_irlist/edit.php,v 1.3 2006/02/06 22:56:45 squareing Exp $
+ * $Header: /cvsroot/bitweaver/_bit_irlist/edit.php,v 1.4 2006/04/13 10:34:33 squareing Exp $
  *
  * Copyright (c) 2006 bitweaver.org
  * All Rights Reserved. See copyright.txt for details and a complete list of authors.
@@ -67,16 +67,6 @@ if(isset($_REQUEST["preview"])) {
 
 	$parsed = $gContent->parseData($formInfo['edit'], (!empty( $_REQUEST['format_guid'] ) ? $_REQUEST['format_guid'] :
 		( isset($gContent->mInfo['format_guid']) ? $gContent->mInfo['format_guid'] : 'tikiwiki' ) ) );
-	/* SPELLCHECKING INITIAL ATTEMPT */
-	//This nice function does all the job!
-	if ($wiki_spellcheck == 'y') {
-		if (isset($_REQUEST["spellcheck"]) && $_REQUEST["spellcheck"] == 'on') {
-			$parsed = $gBitSystem->spellcheckreplace($edit_data, $parsed, $gBitLanguage->mLanguage, 'editwiki');
-			$gBitSmarty->assign('spellcheck', 'y');
-		} else {
-			$gBitSmarty->assign('spellcheck', 'n');
-		}
-	}
 	$gBitSmarty->assign_by_ref('parsed', $parsed);
 	$gContent->invokeServices( 'content_preview_function' );
 } else {

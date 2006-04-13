@@ -1,4 +1,4 @@
-{* $Header: /cvsroot/bitweaver/_bit_irlist/templates/edit_page.tpl,v 1.2 2006/02/10 11:32:46 lsces Exp $ *}
+{* $Header: /cvsroot/bitweaver/_bit_irlist/templates/edit_page.tpl,v 1.3 2006/04/13 10:34:33 squareing Exp $ *}
 <div class="floaticon">{bithelp}</div>
 
 {assign var=serviceEditTpls value=$gLibertySystem->getServiceValues('content_edit_tpl')}
@@ -122,19 +122,6 @@
 				{/jstab}
 
 				{jstab title="Advanced Options"}
-					{legend legend="Advanced Options"}
-						{if $wiki_spellcheck eq 'y'}
-							<div class="row">
-								{formlabel label="Spellcheck" for="spellcheck"}
-								{forminput}
-									<input type="checkbox" name="spellcheck" id="spellcheck" {if $spellcheck eq 'y'}checked="checked"{/if} />
-									{formhelp note=""}
-								{/forminput}
-							</div>
-						{/if}
-
-					{/legend}
-
 					{if $gBitSystem->isPackageActive( 'nexus' )}
 						{legend legend="Insert Link in Menu"}
 							{include file="bitpackage:nexus/insert_menu_item_inc.tpl"}
