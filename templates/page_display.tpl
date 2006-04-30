@@ -1,5 +1,5 @@
 {strip}
-<div class="body"{if $user_dbl eq 'y' and $dblclickedit eq 'y' and $gBitUser->hasPermission( 'bit_p_edit' )} ondblclick="location.href='{$smarty.const.IRLIST_PKG_URL}edit.php?content_id={$contentInfo.content_id}';"{/if}>
+<div class="body"{if $users_double_click eq 'y' and $dblclickedit eq 'y' and $gBitUser->hasPermission( 'bit_p_edit' )} ondblclick="location.href='{$smarty.const.IRLIST_PKG_URL}edit.php?content_id={$contentInfo.content_id}';"{/if}>
 	<div class="header">
 		{tr}<h1>Project-{$contentInfo.project_name}{/tr}{tr} Version-{$contentInfo.revision}</h1>{/tr}
 	</div>
