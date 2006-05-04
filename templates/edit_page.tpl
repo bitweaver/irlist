@@ -1,4 +1,4 @@
-{* $Header: /cvsroot/bitweaver/_bit_irlist/templates/edit_page.tpl,v 1.3 2006/04/13 10:34:33 squareing Exp $ *}
+{* $Header: /cvsroot/bitweaver/_bit_irlist/templates/edit_page.tpl,v 1.4 2006/05/04 12:41:36 squareing Exp $ *}
 <div class="floaticon">{bithelp}</div>
 
 {assign var=serviceEditTpls value=$gLibertySystem->getServiceValues('content_edit_tpl')}
@@ -119,14 +119,6 @@
 						</div>
 
 					{/legend}
-				{/jstab}
-
-				{jstab title="Advanced Options"}
-					{if $gBitSystem->isPackageActive( 'nexus' )}
-						{legend legend="Insert Link in Menu"}
-							{include file="bitpackage:nexus/insert_menu_item_inc.tpl"}
-						{/legend}
-					{/if}
 				{/jstab}
 			{/jstabs}
 		{/form}
