@@ -28,9 +28,6 @@ foreach( array_keys( $tables ) AS $tableName ) {
 $gBitInstaller->registerPackageInfo( IRLIST_PKG_NAME, array(
 	'description' => "Incident Report Tracker with management of project reports",
 	'license' => '<a href="http://www.gnu.org/licenses/licenses.html#LGPL">LGPL</a>',
-	'version' => '0.2',
-	'state' => 'beta',
-	'dependencies' => '',
 ) );
 
 // ### Sequences
