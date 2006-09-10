@@ -4,6 +4,7 @@ global $gBitSystem;
 $registerHash = array(
 	'package_name' => 'irlist',
 	'package_path' => dirname( __FILE__ ).'/',
+	'homeable' => TRUE,
 );
 $gBitSystem->registerPackage( $registerHash );
 

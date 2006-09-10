@@ -19,8 +19,6 @@ $tables = array(
 
 global $gBitInstaller;
 
-$gBitInstaller->makePackageHomeable('irlist');
-
 foreach( array_keys( $tables ) AS $tableName ) {
 	$gBitInstaller->registerSchemaTable( IRLIST_PKG_NAME, $tableName, $tables[$tableName] );
 }
