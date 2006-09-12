@@ -11,7 +11,12 @@ $gBitSystem->registerPackage( $registerHash );
 define('IRLIST_CONTENT_TYPE_GUID', 'irlist' );
 
 if( $gBitSystem->isPackageActive( 'irlist' ) ) {
-	$gBitSystem->registerAppMenu( IRLIST_PKG_NAME, 'IR List', IRLIST_PKG_URL.'index.php', 'bitpackage:irlist/menu_irlist.tpl', IRLIST_PKG_NAME);
+	$menuHash = array(
+		'package_name'  => IRLIST_PKG_NAME,
+		'index_url'     => IRLIST_PKG_URL.'index.php',
+		'menu_template' => 'bitpackage:irlist/menu_irlist.tpl',
+	);
+	$gBitSystem->registerAppMenu( $menuHash );
 }
 
 ?>
