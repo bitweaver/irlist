@@ -1,6 +1,6 @@
 <?php
 
-// $Header: /cvsroot/bitweaver/_bit_irlist/index.php,v 1.2 2006/02/06 11:34:31 lsces Exp $
+// $Header: /cvsroot/bitweaver/_bit_irlist/index.php,v 1.3 2008/06/25 22:21:11 spiderr Exp $
 
 // Copyright (c) 2002-2003, Luis Argerich, Garland Foster, Eduardo Polidor, et. al.
 // All Rights Reserved. See copyright.txt for details and a complete list of authors.
@@ -35,7 +35,7 @@ $gBitSmarty->assign_by_ref('parsed',$pdata);
 $gBitSmarty->assign_by_ref( 'contentInfo', $gContent->mInfo );
 if ( $gContent->isValid() ) {
 	$gBitSystem->setBrowserTitle("Incident Reports Item");
-	$gBitSystem->display( 'bitpackage:irlist/show_ir_item.tpl');
+	$gBitSystem->display( 'bitpackage:irlist/show_ir_item.tpl', NULL, array( 'display_mode' => 'display' ));
 } else {
 	header ("location: ".IRLIST_PKG_URL."list.php");
 	die;

@@ -1,6 +1,6 @@
 <?php
 /**
- * $Header: /cvsroot/bitweaver/_bit_irlist/edit.php,v 1.4 2006/04/13 10:34:33 squareing Exp $
+ * $Header: /cvsroot/bitweaver/_bit_irlist/edit.php,v 1.5 2008/06/25 22:21:11 spiderr Exp $
  *
  * Copyright (c) 2006 bitweaver.org
  * All Rights Reserved. See copyright.txt for details and a complete list of authors.
@@ -176,5 +176,5 @@ $gBitSmarty->assign_by_ref( 'errors', $gContent->mErrors );
 $gBitSmarty->assign( (!empty( $_REQUEST['tab'] ) ? $_REQUEST['tab'] : 'body').'TabSelect', 'tdefault' );
 $gBitSmarty->assign('show_page_bar', 'y');
 
-$gBitSystem->display( 'bitpackage:irlist/edit_page.tpl', 'Edit: '.$gContent->getTitle() );
+$gBitSystem->display( 'bitpackage:irlist/edit_page.tpl', 'Edit: '.$gContent->getTitle() , array( 'display_mode' => 'edit' ));
 ?>

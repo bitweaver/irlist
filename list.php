@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_irlist/list.php,v 1.5 2006/02/06 21:35:17 lsces Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_irlist/list.php,v 1.6 2008/06/25 22:21:11 spiderr Exp $
  * @package blogs
  * @subpackage functions
  */
@@ -25,6 +25,6 @@ $gBitSmarty->assign_by_ref( 'listInfo', $_REQUEST['listInfo'] );
 
 $gBitSystem->setBrowserTitle("View Incident Reports List");
 // Display the template
-$gBitSystem->display( 'bitpackage:irlist/list.tpl');
+$gBitSystem->display( 'bitpackage:irlist/list.tpl', NULL, array( 'display_mode' => 'list' ));
 
 ?>
