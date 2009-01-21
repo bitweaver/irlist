@@ -1,4 +1,4 @@
-{* $Header: /cvsroot/bitweaver/_bit_irlist/templates/edit_page.tpl,v 1.4 2006/05/04 12:41:36 squareing Exp $ *}
+{* $Header: /cvsroot/bitweaver/_bit_irlist/templates/edit_page.tpl,v 1.5 2009/01/21 05:25:55 lsces Exp $ *}
 <div class="floaticon">{bithelp}</div>
 
 {assign var=serviceEditTpls value=$gLibertySystem->getServiceValues('content_edit_tpl')}
@@ -111,7 +111,7 @@
 							</div>
 						{/if}
 
-						{include file="bitpackage:liberty/edit_services_inc.tpl serviceFile=content_edit_mini_tpl}
+						{include file="bitpackage:liberty/edit_services_inc.tpl" serviceFile="content_edit_mini_tpl"}
 
 						<div class="row submit">
 							<input type="submit" name="fCancel" value="{tr}Cancel{/tr}" />&nbsp;
