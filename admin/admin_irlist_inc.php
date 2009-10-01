@@ -1,10 +1,10 @@
 <?php
 
-// $Header: /cvsroot/bitweaver/_bit_irlist/admin/admin_irlist_inc.php,v 1.3 2006/02/06 18:22:31 lsces Exp $
+// $Header: /cvsroot/bitweaver/_bit_irlist/admin/admin_irlist_inc.php,v 1.4 2009/10/01 13:45:42 wjames5 Exp $
 
 // Copyright (c) 2002-2003, Luis Argerich, Garland Foster, Eduardo Polidor, et. al.
 // All Rights Reserved. See copyright.txt for details and a complete list of authors.
-// Licensed under the GNU LESSER GENERAL PUBLIC LICENSE. See license.txt for details.
+// Licensed under the GNU LESSER GENERAL PUBLIC LICENSE. See http://www.gnu.org/copyleft/lesser.html for details.
 
 include_once( IRLIST_PKG_PATH.'IRList.php' );
 

@@ -1,10 +1,10 @@
 <?php
 /**
- * $Header: /cvsroot/bitweaver/_bit_irlist/display_list_header.php,v 1.2 2006/02/06 10:18:45 lsces Exp $
+ * $Header: /cvsroot/bitweaver/_bit_irlist/display_list_header.php,v 1.3 2009/10/01 13:45:42 wjames5 Exp $
  *
  * Copyright ( c ) 2004 bitweaver.org
  * All Rights Reserved. See copyright.txt for details and a complete list of authors.
- * Licensed under the GNU LESSER GENERAL PUBLIC LICENSE. See license.txt for details
+ * Licensed under the GNU LESSER GENERAL PUBLIC LICENSE. See http://www.gnu.org/copyleft/lesser.html for details
  *
  * @package irlist
  * @subpackage functions
