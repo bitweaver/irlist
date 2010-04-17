@@ -1,4 +1,4 @@
-{* $Header: /cvsroot/bitweaver/_bit_irlist/templates/edit_page.tpl,v 1.5 2009/01/21 05:25:55 lsces Exp $ *}
+{* $Header: /cvsroot/bitweaver/_bit_irlist/templates/edit_page.tpl,v 1.6 2010/04/17 04:28:30 wjames5 Exp $ *}
 <div class="floaticon">{bithelp}</div>
 
 {assign var=serviceEditTpls value=$gLibertySystem->getServiceValues('content_edit_tpl')}
@@ -7,7 +7,7 @@
 	<div class="header">
 		<h1>
 		{* this weird dual assign thing is cause smarty wont interpret backticks to object in assign tag - spiderr *}
-		{assign var=conDescr value=$gContent->mType.content_description}
+		{assign var=conDescr value=$gContent->getContentTypeName()}
 		{if $contentInfo.ir_id}
 			{assign var=editLabel value="{tr}Edit{/tr} $conDescr"}
 			{tr}{tr}Edit{/tr} {$contentInfo.title}{/tr}
