@@ -1,4 +1,4 @@
-{* $Header: /cvsroot/bitweaver/_bit_irlist/templates/edit_page.tpl,v 1.6 2010/04/17 04:28:30 wjames5 Exp $ *}
+{* $Header$ *}
 <div class="floaticon">{bithelp}</div>
 
 {assign var=serviceEditTpls value=$gLibertySystem->getServiceValues('content_edit_tpl')}

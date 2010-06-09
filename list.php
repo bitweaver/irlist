@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_irlist/list.php,v 1.7 2010/02/08 21:27:23 wjames5 Exp $
+ * @version $Header$
  * @package blogs
  * @subpackage functions
  */

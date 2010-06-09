@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_irlist/IRList.php,v 1.13 2010/04/18 02:27:24 wjames5 Exp $
+ * @version $Header$
  *
  * Copyright ( c ) 2006 bitweaver.org
  * All Rights Reserved. See below for details and a complete list of authors.
