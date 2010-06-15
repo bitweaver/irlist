@@ -35,7 +35,7 @@ class IRList extends LibertyContent {
 				'handler_class' => 'IRList',
 				'handler_package' => 'irlist',
 				'handler_file' => 'IRList.php',
-				'maintainer_url' => 'http://www.lsces.co.uk'
+				'maintainer_url' => 'http://lsces.co.uk'
 			) );
 		$this->mIRId = (int)$pIRId;
 		$this->mContentId = (int)$pContentId;
